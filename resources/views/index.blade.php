@@ -1,5 +1,6 @@
 @extends('master')
 @section('main')
+    <?php header('Access-Control-Allow-Origin: *'); ?>
     <div class="row align-items-center">
                 <div class="col-xs-6 col-md-6 col-lg-6 login-form">
                      <h3 class="head">Already a Member?</h3>
@@ -13,7 +14,7 @@
                 </div>
                 <div class="col-xs-6 col-md-12 col-lg-6 registration-form">
                     <h3>REGISTRATION FORM</h3>
-                    <form class="form-contact contact_form" action="http://localhost:8001/user" method="POST" id="" novalidate="novalidate">
+                    <form class="form-contact contact_form" action="http://localhost:8001/user" method="POST" id="uniAlumuniForm" novalidate="novalidate">
                         <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
@@ -22,7 +23,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="label">First Name</label>
-                                        <input class="form-control register-form-control" name="firstName" id="name" type="text" autocomplete="off">
+                                        <input class="form-control register-form-control" name="firstName" id="name" type="text" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -35,7 +36,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="label">Date Of Birth</label>
-                                        <input class="form-control register-form-control" name="dateOfBirth"   type="date" autocomplete="off">
+                                        <input class="form-control register-form-control" name="dateOfBirth"   type="date" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -48,7 +49,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="label">Select Type</label>
-                                        <select class="form-control register-form-control" name="userType" id="userType">
+                                        <select class="form-control register-form-control" name="userType" id="userType" required>
                                             <option></option>
                                             <option value="1">Student</option>
                                             <option value="2">Alumuni</option>
@@ -73,19 +74,19 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="label">Email</label>
-                                        <input class="form-control register-form-control" name="email" id="email" type="email"  autocomplete="off">
+                                        <input class="form-control register-form-control" name="email" id="email" type="email"  autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="joinningDate">
                                     <div class="form-group">
                                         <label class="label">Joinning Date</label>
-                                        <input class="form-control register-form-control" name="joinningDate" id="" type="text" autocomplete="off">
+                                        <input class="form-control register-form-control" name="joinningDate" id="" type="date" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="releavingDate">
                                     <div class="form-group">
                                         <label class="label">Releaving Date</label>
-                                        <input class="form-control register-form-control" name="releavingDate" id="" type="date"  autocomplete="off">
+                                        <input class="form-control register-form-control" name="releavingDate" id="" type="date"  autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="admissionNo">
@@ -97,19 +98,26 @@
                                 <div class="col-sm-6" id="departmentNo">
                                     <div class="form-group">
                                         <label class="label">Department No</label>
-                                        <input class="form-control register-form-control" name="departmentNo" id="" type="" autocomplete="off" >
+                                        <input class="form-control register-form-control" name="departmentNo" id="" type="" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-12" id="teacherId">
                                     <div class="form-group">
                                         <label class="label">Teacher Id</label>
-                                        <input class="form-control register-form-control" name="teacherId" id="" type="text" autocomplete="off" >
+                                        <input class="form-control register-form-control" name="teacherId" id="" type="text" autocomplete="off" required>
                                     </div>
                                 </div>
                             <div class="col-sm-12" id="coordiantorNo">
                                 <div class="form-group">
                                     <label class="label">Coordinator Id</label>
                                     <input class="form-control register-form-control" name="coordinatorId" id="subject" type="text" autocomplete="off" >
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" id="Address">
+                                <div class="form-group">
+                                    <label class="label">Address</label>
+                                    <textarea class="form-control register-form-control" name="address" id="address" type="text" autocomplete="off" ></textarea>
                                 </div>
                             </div>
                                 {{--<div class="col-sm-12">
@@ -144,6 +152,7 @@
             </div>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/pnotify@4.0.0/dist/umd/PNotify.js"></script>
         <script>
             $(document).ready(function(){
                 //hide all the things
@@ -152,6 +161,7 @@
                 $('#departmentNo').hide();
                 $('#teacherId').hide();
                 $('#admissionNo').hide();
+                $('#coordiantorNo').hide();
                 //select tags
                 $("#userType").change(function(){
                     var value =  $("#userType option:selected").val();
@@ -187,7 +197,83 @@
                         $('#departmentNo').hide();
                         $('#coordiantorNo').show();
                     }
-                })
+                });
+
+                $("#uniAlumuniForm").validate({
+                    submitHandler: function(form) {
+                        form.submit();
+                    },
+                    ignore: [],
+                    rules: {
+                        'firstName': {
+                            required: true,
+                        },
+                        'dateOfBirth': {
+                            required: true,
+                        },
+                        'userType': {
+                            required: true,
+                        },
+                        'gender': {
+                            required: true,
+                        },
+                        'email': {
+                            required: true,
+                            email : true
+                        },
+                    }
+                });
+
+                $("#uniAlumuniForm").submit(function(e) {
+                    var token = document.getElementsByName("csrfToken").value;
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                    var form = $(this);
+                    var url = form.attr('action');
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        crossDomain : true,
+                        headers: {
+                            'X-CSRF-Token': token
+                        },
+                        data: form.serialize(), // serializes the form's elements.
+                        success: function(data)
+                        {
+                            var responseData = JSON.stringify(data);
+                            var jsonparse = JSON.parse(responseData);
+                            console.log("jsonparse",jsonparse);
+                            for(var mainData in jsonparse){
+                                if(mainData === 'Validation Error'){
+                                    PNotify.error({
+                                        title: "Validation Error",
+                                        text: 'Please Fill correct Data'
+                                    });
+                                }
+                                if(mainData === 'true'){
+                                    PNotify.success({
+                                        title: "Success",
+                                        text: 'User Registered Successfully'
+                                    });
+                                    $('#uniAlumuniForm')[0].reset();
+                                }
+                                else {
+                                    if (mainData === 'errorNew'){
+                                        PNotify.error({
+                                            title: "Database Exception",
+                                            text: 'Contact To The service Provider'
+                                        });
+                                     }
+                                }
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
+                        {
+                            console.log(textStatus);
+                            /*alert("error");*/
+                        }
+                    });
+                });
+
             })
         </script>
 @stop
